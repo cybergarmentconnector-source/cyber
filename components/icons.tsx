@@ -1,0 +1,22 @@
+const P = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, viewBox: '0 0 24 24', 'aria-hidden': true };
+export const Icon = {
+  dashboard: () => <svg {...P}><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>,
+  sales: () => <svg {...P}><path d="M4 19h16"/><path d="m5 15 4-5 4 3 6-7"/><path d="M15 6h4v4"/></svg>,
+  purchases: () => <svg {...P}><path d="M5 7h14l-1.5 9.5a2 2 0 0 1-2 1.5h-7a2 2 0 0 1-2-1.5z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>,
+  receipts: () => <svg {...P}><path d="M12 4v12"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>,
+  payments: () => <svg {...P}><path d="M12 20V8"/><path d="m7 13 5-5 5 5"/><path d="M5 4h14"/></svg>,
+  receivables: () => <svg {...P}><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>,
+  payables: () => <svg {...P}><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h3"/></svg>,
+  stock: () => <svg {...P}><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg>,
+  sync: () => <svg {...P}><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg>,
+  menu: () => <svg {...P}><path d="M4 7h16M4 12h16M4 17h16"/></svg>,
+  print: () => <svg {...P}><path d="M7 9V4h10v5"/><rect x="4" y="9" width="16" height="7" rx="1.5"/><path d="M7 14h10v6H7z"/></svg>,
+  pdf: () => <svg {...P}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 12v6"/><path d="m9 15 3 3 3-3"/></svg>,
+  back: () => <svg {...P}><path d="m14 6-6 6 6 6"/></svg>,
+  chevron: () => <svg {...P}><path d="m9 6 6 6-6 6"/></svg>,
+  down: () => <svg {...P}><path d="m6 9 6 6 6-6"/></svg>,
+  close: () => <svg {...P}><path d="M6 6l12 12M18 6 6 18"/></svg>,
+  search: () => <svg {...P}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
+  line: () => <svg {...P}><path d="M3 17l5-6 4 3 8-9"/><path d="M3 21h18"/></svg>,
+  chart: () => <svg {...P}><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>,
+};

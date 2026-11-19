@@ -1,0 +1,572 @@
+/* Tally Cloud Reporting — design tokens and components. Light, quiet, readable. */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --line: #e3e6eb;
+  --line-strong: #cfd4db;
+  --text: #1c2430;
+  --text-2: #4c5766;
+  --muted: #6b7686;
+  --accent: #1d5fbf;
+  --accent-hover: #174d9c;
+  --accent-weak: #eaf1fb;
+  --focus: #1d5fbf;
+  --ok: #1e7b45; --ok-bg: #e9f6ee;
+  --warn: #8a5a00; --warn-bg: #fdf4e3;
+  --err: #b42318; --err-bg: #fdeceb;
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+  --radius: 8px;
+  --nav-w: 232px;
+  --top-h: 56px;
+  font-size: 14px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font-family: var(--font-inter), -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+h1 { font-size: 20px; } h2 { font-size: 15px; } h3 { font-size: 13px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+/* Mouse/touch users get no blue ring on buttons, selects and links; keyboard users (Tab) still do. The <html data-input> flag is set by AppShell. */
+html[data-input="pointer"] :focus-visible { outline: none; }
+/* Text boxes and the boxes built around them never get a focus border or ring (clicking or typing in them changes nothing on the border). */
+input, textarea, select, input:focus, input:focus-visible, textarea:focus, textarea:focus-visible, .days-field:focus-within, .search:focus-within, .sel-btn:focus, .sel-btn:focus-visible { outline: none; box-shadow: none; }
+/* Text fields keep a quiet cue even for the mouse, so it is clear where typing goes. */
+/* Text fields look exactly the same while typing in them: no blue border, outline, glow or colour change (the caret shows
+ * where you are typing). */
+input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="date"]:focus {
+  outline: none; box-shadow: none; }
+.num, td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tnum { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+/* ── Shell ── */
+.shell { display: grid; grid-template-columns: var(--nav-w) 1fr; min-height: 100vh; }
+.nav { background: var(--surface); border-right: 1px solid var(--line); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+.nav-brand { height: var(--top-h); display: flex; align-items: center; gap: 10px; padding: 0 18px; border-bottom: 1px solid var(--line); font-weight: 600; }
+.nav-brand .logo { width: 26px; height: 26px; border-radius: 6px; background: var(--accent); display: grid; place-items: center; }
+.nav ul { list-style: none; margin: 0; padding: 10px 10px; overflow-y: auto; flex: 1; }
+.nav li a { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; color: var(--text-2); font-weight: 500; }
+.nav li a:hover { background: var(--surface-2); text-decoration: none; color: var(--text); }
+.nav li a[aria-current="page"] { background: var(--accent-weak); color: var(--accent); }
+.nav li a svg { width: 17px; height: 17px; flex: none; }
+.nav .nav-sep { height: 1px; background: var(--line); margin: 8px 6px; }
+.nav-foot { padding: 12px 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar { height: var(--top-h); background: var(--surface); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; padding: 0 20px; position: sticky; top: 0; z-index: 20; }
+.topbar .spacer { flex: 1; }
+.btn.menu-btn { display: none; }
+.content { padding: 18px 20px 40px; width: 100%; }
+
+/* ── Controls ── */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 12px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--text); border-radius: 6px; font: inherit; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: var(--surface-2); text-decoration: none; }
+.btn:disabled { opacity: .55; cursor: default; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: var(--accent-hover); }
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn.ghost:hover { background: var(--surface-2); }
+.btn svg { width: 15px; height: 15px; }
+.btn.sm { height: 28px; padding: 0 10px; font-size: 13px; }
+select, input[type="text"], input[type="search"], input[type="date"], input[type="email"], input[type="password"] {
+  height: 32px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); color: var(--text); padding: 0 10px; font: inherit; min-width: 0;
+}
+select { padding-right: 28px; }
+/* Dropdown popups (components/pickers.tsx): Select and DatePicker */
+.sel { position: relative; display: inline-block; min-width: 0; }
+.sel-btn { height: 32px; width: 100%; display: inline-flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); color: var(--text); padding: 0 8px 0 10px; font: inherit; text-align: left; cursor: pointer; transition: border-color .12s, box-shadow .12s; }
+.sel-btn:hover { border-color: #aab2be; }
+.sel-btn[aria-expanded="true"] { border-color: var(--accent); box-shadow: none; }
+.sel-btn .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sel-btn svg { width: 15px; height: 15px; flex: none; color: var(--muted); transition: transform .15s; }
+.sel-btn[aria-expanded="true"] svg { color: var(--accent); }
+.sel:not(.date) .sel-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.pop-list { position: fixed; z-index: 100; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 10px; padding: 4px; overflow: auto; max-width: calc(100vw - 16px); box-shadow: none; outline: none; animation: pop-in .12s ease-out; }
+@keyframes pop-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pop-list { animation: none; } .sel-btn svg { transition: none; } }
+.pop-search { width: calc(100% - 4px); margin: 2px; height: 30px; }
+.opt { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; cursor: pointer; color: var(--text); line-height: 1.3; }
+.opt-label { flex: 1; min-width: 0; }
+.opt[aria-selected="true"] { color: var(--accent); font-weight: 600; background: var(--accent-weak); }
+/* Option under the mouse: a darker shade, so it is obvious what a click will pick. Nothing is shaded until the mouse
+ * rests on an option; with the keyboard, the option reached with the arrow keys gets the same shade. */
+.opt:hover, html:not([data-input="pointer"]) .opt[data-active="true"] { background: #e4e8ee; }
+.opt[aria-selected="true"]:hover, html:not([data-input="pointer"]) .opt[aria-selected="true"][data-active="true"] { background: #d6e3f6; }
+.opt .tick svg { width: 14px; height: 14px; display: block; }
+.grp { padding: 10px 10px 4px; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+div[role="group"] + div[role="group"], .opt + div[role="group"] { border-top: 1px solid var(--line); margin-top: 4px; }
+.opt-none { padding: 12px 10px; color: var(--muted); text-align: center; }
+.pop-list.cal { width: 288px; padding: 10px; overflow: visible; }
+/* Days popup (DaysPicker): title, a big days box, quick picks, Cancel / Apply. */
+.days-pop { position: fixed; z-index: 100; width: 264px; max-width: calc(100vw - 16px); padding: 14px; display: grid; gap: 12px; background: var(--surface);
+  border: 1px solid var(--line-strong); border-radius: 12px; box-shadow: 0 10px 28px rgba(16,24,40,.12), 0 2px 6px rgba(16,24,40,.06); animation: pop-in .12s ease-out; }
+@media (prefers-reduced-motion: reduce) { .days-pop { animation: none; } }
+.days-head { display: grid; gap: 2px; }
+.days-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.days-sub { font-size: 12px; color: var(--muted); }
+.days-field { display: flex; align-items: baseline; gap: 8px; padding: 8px 14px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface-2); cursor: text; transition: border-color .12s, background .12s; }
+.days-field:focus-within { background: var(--surface); }   /* no border change on focus */
+.days-field input { flex: 1; min-width: 0; width: 100%; border: 0; outline: none; box-shadow: none; padding: 0; background: transparent; font: inherit; font-size: 24px; font-weight: 600; line-height: 1.3; color: var(--text); font-variant-numeric: tabular-nums; }
+.days-field input::placeholder { color: #c2c8d0; }
+.days-field span { color: var(--muted); font-size: 13px; font-weight: 500; }
+.days-quick { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.days-quick button { height: 30px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font: inherit; font-size: 12.5px; font-weight: 500; color: var(--text-2); cursor: pointer; }
+.days-quick button:hover { border-color: var(--line-strong); color: var(--text); background: var(--surface-2); }
+.days-quick button[aria-pressed="true"] { background: var(--accent-weak); border-color: var(--accent-weak); color: var(--accent); font-weight: 600; }
+.days-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.days-actions .btn { width: 100%; height: 34px; }
+.cal-head { display: flex; align-items: center; gap: 2px; margin-bottom: 8px; }
+.cal-title { flex: 1; text-align: center; font-weight: 600; }
+.cal-nav { width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 6px; background: none; color: var(--text-2); cursor: pointer; padding: 0; }
+.cal-nav:hover { background: #f0f3f7; color: var(--text); }
+.cal-nav svg { width: 15px; height: 15px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-dow { text-align: center; font-size: 11px; font-weight: 600; color: var(--muted); padding: 4px 0; }
+.cal-day { height: 34px; border: 1px solid transparent; border-radius: 8px; background: none; font: inherit; font-variant-numeric: tabular-nums; color: var(--text); cursor: pointer; padding: 0; }
+.cal-day:hover:not(:disabled) { background: #f0f3f7; }
+.cal-day.other { color: #9aa3b0; }
+.cal-day.today { border-color: var(--accent); }
+.cal-day[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.cal-day:disabled { opacity: .35; cursor: not-allowed; }
+.cal-foot { display: flex; justify-content: flex-end; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+.cal-link { border: 0; background: none; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; padding: 4px 6px; border-radius: 6px; }
+.cal-link:hover:not(:disabled) { background: var(--accent-weak); }
+.cal-link:disabled { opacity: .4; cursor: not-allowed; }
+.pop { box-shadow: none; border: 1px solid var(--line-strong); border-radius: 10px; }
+input[type="search"] { padding-left: 32px; background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7686' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 10px center; }
+label.field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+/* Option switches (e.g. Tax: Including / Excluding): a soft grey track with the chosen option on a white pill. */
+.seg-group { display: inline-flex; align-items: center; gap: 8px; }
+.seg-group { margin-right: 14px; }   /* space after each switch: when they wrap on a phone, the next one starts at the edge */
+.seg-label { font-size: 12px; font-weight: 500; color: var(--muted); }
+.seg { display: inline-flex; gap: 2px; padding: 3px; background: #e8ebef; border-radius: 8px; }
+.seg button { border: 0; background: transparent; height: 28px; padding: 0 12px; border-radius: 6px; font: inherit; font-size: 13px; color: var(--text-2); cursor: pointer; white-space: nowrap; transition: background .12s, color .12s, box-shadow .12s; }
+.seg button:hover { color: var(--text); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(16,24,40,.10), 0 0 0 1px rgba(16,24,40,.04); }
+
+/* ── Page header ── */
+.page-head { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.page-head .titles { flex: 1; min-width: 200px; }
+.page-head .sub { color: var(--muted); margin-top: 2px; font-size: 13px; }
+.toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.page-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* Period under the page title: the dates are the picker ("1 Apr 2026 – 31 Mar 2027 ⌄"); a click opens the period menu. */
+.period-sub { margin-top: 2px; }
+.period-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sel.sel-text .sel-btn { height: auto; width: auto; padding: 2px 4px; margin-left: -4px; gap: 4px; border: 0; border-radius: 6px; background: transparent;
+  color: var(--muted); font-size: 13px; font-weight: 500; box-shadow: none; }
+.sel.sel-text .sel-btn:hover, .sel.sel-text .sel-btn[aria-expanded="true"] { background: var(--surface-2); color: var(--text); }
+.sel.sel-text .sel-btn svg { width: 14px; height: 14px; }
+.period-inline { gap: 0; }
+/* Custom dates under the title: the same plain text as the other periods, each date clickable. */
+.date-range.plain { height: auto; padding: 0; border: 0; background: transparent; }
+.date-range.plain:hover, .date-range.plain:has([aria-expanded="true"]) { border: 0; box-shadow: none; }
+.date-range.plain .sel-btn { height: auto; padding: 2px 4px; border-radius: 6px; color: var(--muted); font-size: 13px; font-weight: 500; }
+.date-range.plain .sel-btn:hover, .date-range.plain .sel-btn[aria-expanded="true"] { background: var(--surface-2); color: var(--text); }
+.date-range.plain .sel-btn svg { display: none; }
+.date-range.plain .date-range-sep { padding: 0; font-size: 13px; }
+.date-range.plain:first-child { margin-left: -4px; }
+.date-range.plain + .sel-text .sel-btn { margin-left: 0; padding: 2px 3px; gap: 0; }
+.sel-text .lbl:empty { display: none; }
+.date-range.plain .tnum { font-variant-numeric: normal; }   /* same digit spacing as the other periods */
+.period-inline .sel-text .sel-btn, .date-range.plain .sel-btn { line-height: 1.45; }
+@media print { .sel.sel-text .sel-btn svg { display: none; } .period-inline .date-range .sel-btn svg { display: none; } }
+/* Custom date range: one field with both dates (no "to", no second box); the calendar icon sits once, at its end. */
+.date-range { display: inline-flex; align-items: center; height: 32px; padding: 0 2px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); }
+.date-range:hover { border-color: #aab2be; }
+.date-range:has([aria-expanded="true"]) { border-color: var(--accent); box-shadow: none; }
+.date-range .sel-btn { height: 100%; border: 0; border-radius: 4px; background: transparent; box-shadow: none; padding: 0 8px; }
+.date-range .sel-btn:hover { background: var(--surface-2); }
+.date-range .sel-btn[aria-expanded="true"] { background: var(--accent-weak); box-shadow: none; }
+.date-range .sel:first-child .sel-btn svg { display: none; }
+.date-range-sep { color: var(--muted); padding: 0 2px; }
+.filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+/* Search + filters row (every table): the search box stretches across the row and the filter buttons sit at its right end.
+ * On a narrow screen the search takes the full width and the filters wrap onto the line below. */
+.search-input { width: 240px; }
+.filters .search-input { flex: 1 1 280px; width: auto; min-width: 200px; }
+.crumbs { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+.crumbs a { color: var(--muted); }
+
+/* ── Cards ── */
+/* Cards flow one after another and each row is filled edge to edge (a short last row stretches), so a grid never leaves blank cells. */
+.cards { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+.cards > * { flex: 1 1 200px; min-width: 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: block; color: inherit; min-width: 0; }
+a.card:hover, button.card:hover { border-color: var(--line-strong); text-decoration: none; background: #fcfdfe; }
+button.card { text-align: left; font: inherit; cursor: pointer; width: 100%; }
+.card .k { font-size: 12px; color: var(--muted); font-weight: 500; display: flex; justify-content: space-between; align-items: center; gap: 6px; min-height: 22px; }
+.card .k .seg-group { margin: 0; flex: none; }
+/* Small dropdown button in a card's corner (e.g. Net / Gross): borderless until pointed at. */
+.card-menu { flex: none; margin: -2px -4px -2px 0; }
+.card-menu .sel-btn { height: 22px; width: auto; padding: 0 4px 0 7px; gap: 2px; border-color: transparent; background: var(--surface-2); border-radius: 5px; font-size: 11.5px; font-weight: 600; color: var(--text-2); }
+.card-menu .sel-btn:hover { border-color: var(--line); color: var(--text); }
+.card-menu .sel-btn svg { width: 12px; height: 12px; }
+.opt-hint { color: var(--muted); font-size: 12px; margin-left: 8px; }
+/* Party account amounts. Sales: invoices green, credit notes / receipts red. Purchases: invoices red, debit notes / payments green. */
+.amt-up { color: #16a34a; }   /* vibrant green */
+.amt-down { color: #e02424; } /* vibrant red */
+/* Name a table is filtered to (customer, item, ledger…), at the right of the search row. */
+/* Title bar of a sheet opened from the list (credit notes, an item, a month…): name centred on the UI blue. A customer's
+ * own sheet has no bar: its InfoBox (components/ui.tsx) sits above it as a separate card. */
+.sheet-title { background: var(--accent); color: #fff; text-align: center; font-size: 16px; font-weight: 700; letter-spacing: .03em;
+  text-transform: uppercase; padding: 12px 16px; min-height: 48px; line-height: 24px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sheet-title { border-bottom: 1px solid rgba(255,255,255,.35); }   /* separation line between the name and the column headings */
+.filter-name { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40ch; }
+/* Compact switch (inside a card): same look, smaller. */
+.seg.sm { padding: 2px; gap: 1px; border-radius: 7px; }
+.seg.sm button { height: 18px; padding: 0 9px; border-radius: 5px; font-size: 11.5px; }
+.card .v { font-size: 20px; font-weight: 600; margin-top: 4px; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.card .d { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.card.selected { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 14px; min-width: 0; }
+/* Rounded corners stay rounded: table header, striped / total rows and hover colours are square, so the panel clips
+ * whatever reaches its edge. (Dropdowns open in a layer of their own and are not cut off.) */
+.panel, .card { overflow: hidden; overflow: clip; }
+.panel-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.panel-head h2 { flex: 1; }
+.panel-body { padding: 12px 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* ── Tabs ── */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 12px; overflow-x: auto; isolation: isolate; }
+/* Tab buttons look like the side menu: grey text, a soft grey pill on hover, and the selected tab in a light-blue pill
+ * with blue text (same colours as the selected menu item). */
+.tabs button, .tabs a { position: relative; border: 0; background: none; font: inherit; padding: 13px 14px 12px; color: var(--text-2); cursor: pointer; white-space: nowrap; font-weight: 500; transition: color .12s; }
+.tabs button:hover, .tabs a:hover { color: var(--text); }
+.tabs button::before, .tabs a::before { content: ''; position: absolute; inset: 6px 2px; border-radius: 6px; background: transparent; transition: background .12s; z-index: -1; }
+.tabs button:hover::before, .tabs a:hover::before { background: var(--surface-2); }
+.tabs [aria-selected="true"], .tabs [aria-selected="true"]:hover { color: var(--accent); }
+.tabs [aria-selected="true"]::before, .tabs [aria-selected="true"]:hover::before { background: var(--accent-weak); }
+
+/* Top of a sheet (every table panel): tabs across the full width, then the search + filter row, then the column header.
+ * One look everywhere: components put <div className="sheet-head"> around their Tabs and filters. */
+.sheet-head { padding: 0 16px; border-bottom: 1px solid var(--line); position: relative; z-index: 0; }
+.sheet-head .tabs { margin: 0 -16px; padding: 0 10px; border-bottom: 1px solid var(--line); }
+.sheet-head .tabs:last-child { border-bottom: 0; }
+/* A tab with no search or filters (e.g. Month): no empty row under the tabs, and only one line above the table. */
+.sheet-head .filters:empty { display: none; }
+.sheet-head .tabs:has(+ .filters:empty) { border-bottom: 0; }
+.sheet-head .filters { margin: 0; padding: 12px 0; gap: 10px; }
+.sheet-head .search-input, .sheet-head .sel-btn { height: 38px; border-radius: 8px; }
+.sheet-head .search-input, .sheet-head .search-input:hover, .sheet-head .search-input:focus { background-color: var(--surface-2); border-color: var(--line); box-shadow: none; outline: none; }
+.sheet-head .filters > label { height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; font-size: 13px; color: var(--text-2); }
+.sheet-head .filters > label:hover { border-color: var(--line-strong); }
+.sheet-head .filters > .tag { height: 30px; display: inline-flex; align-items: center; gap: 4px; border-radius: 15px; padding: 0 4px 0 12px; }
+
+/* ── Tables ── */
+.table-wrap { overflow-x: auto; }
+/* Sheet style, the same for every table on the site. Columns are centred, except name/text columns (class "name": party,
+ * ledger, item, group, account, narration…), which read from the left. Light column lines, a clear header, faint striping. */
+table.data { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; font-variant-numeric: tabular-nums; }
+table.data th { text-align: center; font-weight: 600; color: var(--muted); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; background: #f7f8fa; border-bottom: 1px solid var(--line); padding: 0 12px; height: 42px; vertical-align: middle; white-space: normal; line-height: 1.3; padding-top: 6px; padding-bottom: 6px; position: sticky; top: 0; z-index: 1; }
+table.data th.num, table.data td.num { text-align: center; }
+table.data th.name, table.data td.name, table.data th.lead { text-align: left; }   /* a column's own alignment wins, also when its text wraps */
+table.data th + th, table.data td + td { border-left: 1px solid #eef0f4; }
+/* Sort button: label only takes layout space; the arrow hangs outside it, so every header text sits exactly on its column's text/number edge. */
+table.data th button { all: unset; cursor: pointer; display: inline-block; position: relative; line-height: 1.3; }
+table.data th button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+/* Header row of every sheet: solid UI blue with white headings (same blue as the footer / total row). */
+table.data th { background: var(--accent); color: #fff; border-bottom-color: var(--accent); }
+table.data th + th { border-left-color: rgba(255,255,255,.18); }
+table.data th button:focus-visible { outline-color: #fff; }
+/* Exception: a sheet titled by a blue name bar (a customer's account, credit notes…) keeps only the name bar blue; its
+ * column-heading row is plain (light grey, muted headings) so the two don't merge into one blue block. */
+.sheet-title ~ * table.data th { background: #f7f8fa; color: var(--muted); border-bottom-color: var(--line); }
+.sheet-title ~ * table.data th + th { border-left-color: #eef0f4; }
+.sheet-title ~ * table.data th button:focus-visible { outline-color: var(--focus); }
+/* First column that starts with an expand/collapse toggle: header aligns with the name, not the toggle. */
+table.data th.lead { padding-left: 42px; }   /* 12px cell padding + 24px toggle + 6px gap */
+/* Row lines are drawn on the TOP edge of each row only, so two lines can never stack: a total / group row simply draws a
+ * darker line on the same edge, the first row sits on the header's line, and the last row ends on the panel's edge. */
+table.data td { text-align: center; padding: 0 12px; height: 44px; border-top: 1px solid #edf0f3; vertical-align: middle; }
+table.data td.wrap { padding-top: 8px; padding-bottom: 8px; }
+.tgl { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; margin: 0 6px 0 0; vertical-align: middle; border: 0; border-radius: 6px; background: transparent; color: var(--text-2); font: inherit; font-size: 12px; cursor: pointer; }
+.tgl:hover { background: var(--surface-2); }
+.tgl-sp { display: inline-block; width: 30px; vertical-align: middle; }
+table.data tbody tr:nth-child(even) td { background: #fbfcfd; }
+table.data tbody tr:hover td { background: #f2f6fc; }
+table.data tr.clickable { cursor: pointer; }
+table.data tbody tr.total td { font-weight: 600; background: #f3f5f8; border-top: 1px solid var(--line-strong); }
+/* Footer (total / closing) row at the end of a sheet: solid UI blue with white text, also on hover and in print. */
+table.data tbody tr.total.foot td, table.data tbody tr.total.foot:hover td { background: var(--accent); color: #fff; border-top: 1px solid var(--accent); }
+table.data tbody tr.total.foot td * { color: inherit; }
+table.data tbody tr.opening-row td, table.data tbody tr.opening-row:hover td { background: #fff; font-weight: 600; }
+table.data tbody tr.total.foot td + td { border-left-color: rgba(255,255,255,.18); }
+table.data tbody tr.sub td { background: var(--surface-2); font-size: 12px; }
+table.data tbody tr:first-child td { border-top: 0; }   /* the header already draws this line (after the total rule on purpose) */
+table.data tr.muted-row td { color: var(--muted); }
+table.data td.wrap { white-space: normal; }
+/* Column widths: set by each column's heading only, never by the rows, so a sheet keeps the same columns while more rows
+ * load (scrolling), when sorting and when switching filters. Name / text columns are wider; spare width is shared out in
+ * proportion; on a narrow screen the sheet keeps these widths and scrolls sideways. A cell that is still too long is cut
+ * with "…" (names wrap instead). Phones use the card layout below, where this does not apply. */
+table.data { table-layout: fixed; }
+table.data th { width: 132px; }
+table.data th.name, table.data th.lead { width: 260px; }
+table.data td:not(.name):not(.wrap) { overflow: hidden; text-overflow: ellipsis; }
+table.data td.name, table.data td.wrap { overflow-wrap: anywhere; }
+/* Dates, numbers, voucher numbers… stay on one line; only name / text columns may wrap. Column headings wrap onto a
+ * second line when a sheet is short of space, so the whole sheet always fits its panel. */
+table.data td:not(.name):not(.wrap) { white-space: nowrap; }
+/* Every row of every sheet is exactly as tall as the header row (42px): one line per cell. A cell that does not fit ends
+ * in "…" (the full text shows on hover, see DataTable) instead of making its row taller; extra lines inside a cell (a
+ * narration under a name) continue on the same line. Phones (card layout) are unaffected. */
+table.data th, table.data td, table.data td.wrap, table.data td.name { height: 42px; padding-top: 0; padding-bottom: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
+table.data td div, table.data td p { display: inline; margin: 0 0 0 6px; }
+/* End of a continuous sheet: an invisible marker that loads the next rows before the reader gets there. */
+.load-more { min-height: 1px; }
+.table-foot { display: flex; align-items: center; gap: 10px; padding: 8px 14px; font-size: 12px; color: var(--muted); }
+.table-foot .spacer, .filters .spacer { flex: 1; }
+.empty { padding: 28px; text-align: center; color: var(--muted); }
+
+/* ── Column search (components/ui.tsx → useColumnSearch, SearchHeading, SearchRow) ──
+ * A round search button at the right end of a name heading (Customer…); it turns into ✕ while the search row is open.
+ * The search row sits under the header row and slides open / shut (height + fade, ~180 ms); while shut it is hidden
+ * from the keyboard and screen readers. The same on every sheet. */
+table.data th.th-search { padding-right: 6px; }
+.th-inner { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.th-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+table.data th button.th-search-btn { flex: none; position: relative; display: block; width: 28px; height: 28px; border-radius: 7px; cursor: pointer; color: inherit;
+  transition: background-color .15s ease; }
+table.data th button.th-search-btn:hover { background: rgba(255,255,255,.16); }
+table.data th button.th-search-btn[aria-expanded="true"] { background: rgba(255,255,255,.22); }
+.sheet-title ~ * table.data th button.th-search-btn:hover { background: rgba(16,24,40,.06); }
+.sheet-title ~ * table.data th button.th-search-btn[aria-expanded="true"] { background: rgba(16,24,40,.09); }
+.th-search-btn > span { position: absolute; inset: 0; display: grid; place-items: center; transition: opacity .15s ease, transform .18s cubic-bezier(.2,.8,.2,1); }
+.th-search-btn svg { width: 16px; height: 16px; stroke-width: 2.2; }
+.th-search-btn .i-close { opacity: 0; transform: rotate(-90deg) scale(.6); }
+.th-search-btn[aria-expanded="true"] .i-search { opacity: 0; transform: rotate(90deg) scale(.6); }
+.th-search-btn[aria-expanded="true"] .i-close { opacity: 1; transform: none; }
+/* The row itself: no height, padding or lines of its own, so a shut row takes no space at all. */
+table.data thead tr.search-row td { height: auto; padding: 0; border: 0; background: var(--surface); text-align: left; white-space: normal; overflow: hidden; }
+table.data tr.search-row td div { display: block; margin: 0; }   /* not the one-line inline cell content rule */
+table.data tr.search-row td div.search-slide { display: grid; }
+.search-slide { display: grid; grid-template-rows: 0fr; visibility: hidden;
+  transition: grid-template-rows .18s cubic-bezier(.2,.8,.2,1), visibility 0s linear .18s; }
+.search-slide-in { min-height: 0; overflow: hidden; }
+.search-slide-box { padding: 8px 10px; border-bottom: 1px solid var(--line); opacity: 0; transform: translateY(-6px);
+  transition: opacity .12s ease, transform .18s cubic-bezier(.2,.8,.2,1); }
+tr.search-row[data-open] .search-slide { grid-template-rows: 1fr; visibility: visible;
+  transition: grid-template-rows .18s cubic-bezier(.2,.8,.2,1), visibility 0s; }
+tr.search-row[data-open] .search-slide-box { opacity: 1; transform: none; transition-delay: .03s; }
+tr.search-row input.col-search-input { display: block; width: 100%; height: 36px; border-radius: 8px; border-color: var(--line); background-color: var(--surface-2); font-size: 13px; }
+tr.search-row input.col-search-input:focus { background-color: var(--surface); border-color: var(--line); }
+/* The search found nothing: one quiet line where the rows were. */
+table.data tbody tr.no-match td, table.data tbody tr.no-match:hover td { color: var(--muted); background: var(--surface); text-align: center; }
+/* Phones (card layout, no header row): a slim blue bar with just the searchable heading and its button stays on top. */
+@media (max-width: 640px) {
+  table.data.cards-sm thead:has(.th-search) { display: block; }
+  table.data.cards-sm thead:has(.th-search) tr { display: flex; padding: 0; border: 0; }
+  table.data.cards-sm thead:has(.th-search) tr:first-child th:not(.th-search) { display: none; }
+  table.data.cards-sm thead th.th-search { display: flex; align-items: center; flex: 1; width: auto; height: 42px; }
+  table.data.cards-sm thead th.th-search .th-inner { flex: 1; }
+  table.data.cards-sm thead tr.search-row td { display: block; flex: 1; width: 100%; padding: 0; }
+  table.data.cards-sm thead tr.search-row td::before, table.data.cards-sm tbody tr.no-match td::before { content: none; }
+  table.data.cards-sm tbody tr.no-match td { justify-content: center; padding: 12px 8px; }
+}
+
+/* ── Status labels (always text + symbol, never colour alone) ── */
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid transparent; white-space: nowrap; }
+.tag.ok { color: var(--ok); background: var(--ok-bg); }
+.tag.warn { color: var(--warn); background: var(--warn-bg); }
+.tag.err { color: var(--err); background: var(--err-bg); }
+.tag.neutral { color: var(--text-2); background: #eef0f3; }
+.tag.info { color: var(--accent); background: var(--accent-weak); }
+.notice { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-radius: 6px; font-size: 13px; margin-bottom: 12px; border: 1px solid var(--line); background: var(--surface); }
+.notice.warn { background: var(--warn-bg); border-color: #f1dcae; color: #5c3d00; }
+.notice.err { background: var(--err-bg); border-color: #f5c6c2; color: #7a1a12; }
+.notice.info { background: var(--accent-weak); border-color: #cddcf3; color: #17407e; }
+
+/* ── Freshness ── */
+.fresh { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2); }
+.fresh .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+.fresh.stale .dot, .fresh.never .dot { background: #d29b00; }
+.fresh.failed .dot { background: var(--err); }
+
+/* ── Chart ── */
+.chart-legend { display: flex; gap: 14px; font-size: 12px; color: var(--text-2); flex-wrap: wrap; }
+.chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.chart-legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.chart-tooltip { background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 8px 10px; font-size: 12px; box-shadow: 0 2px 8px rgba(16,24,40,.08); }
+.chart-tooltip .t { font-weight: 600; margin-bottom: 4px; }
+.chart-tooltip .r { display: flex; justify-content: space-between; gap: 16px; font-variant-numeric: tabular-nums; }
+
+/* ── Ageing strip ── */
+.ageing { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+/* Invoice-age cards (Receivables / Payables): all four share one shape; the selected one gets a green tick at top right.
+   The Custom card holds its own days box ("More than [ 75 ] days"). */
+.age-card { position: relative; display: block; width: 100%; text-align: left; font: inherit; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px; cursor: pointer; min-width: 0; }
+.age-card:hover { border-color: var(--line-strong); }
+.age-card[data-selected] .k { padding-right: 24px; }
+.ageing .k { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; min-height: 22px; }
+.age-hint { font-weight: 400; font-size: 13px; color: var(--muted); }
+.age-tick { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%; background: #16a34a; display: grid; place-items: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.age-tick svg { width: 12px; height: 12px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ageing-sk { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; display: grid; gap: 8px; }
+.ageing .v { font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 2px; min-height: 20px; }
+
+/* ── Detail (invoice / party) ── */
+.detail-head { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; }
+.kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px 18px; }
+.kv div span { display: block; font-size: 12px; color: var(--muted); }
+.kv div b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.big-amount { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.totals { margin-left: auto; width: min(380px, 100%); font-size: 13px; }
+.totals div { display: flex; justify-content: space-between; padding: 4px 0; font-variant-numeric: tabular-nums; }
+.totals .grand { border-top: 1px solid var(--line-strong); margin-top: 4px; padding-top: 8px; font-weight: 600; font-size: 15px; }
+
+/* ── Login ── */
+.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.login { width: min(380px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 26px; }
+.login form { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+.login input { width: 100%; height: 38px; }
+.login .btn { height: 38px; }
+
+/* ── Drawer / responsive ── */
+.scrim { display: none; }
+@media (max-width: 1100px) { .grid-2 { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .nav { position: fixed; left: 0; top: 0; bottom: 0; width: 264px; z-index: 50; transform: translateX(-100%); transition: transform .18s ease; }
+  .nav.open { transform: none; }
+  .scrim.open { display: block; position: fixed; inset: 0; background: rgba(16,24,40,.35); z-index: 40; }
+  .btn.menu-btn { display: inline-flex; }
+  .topbar { padding: 0 12px; gap: 8px; }
+  .content { padding: 14px 12px 32px; }
+  .ageing { grid-template-columns: repeat(2, 1fr); }
+  .detail-head { grid-template-columns: 1fr; }
+  .hide-sm { display: none !important; }
+}
+@media (max-width: 640px) {
+  .cards { gap: 8px; }
+  .cards > * { flex-basis: calc(50% - 4px); }
+  .card .v { font-size: 17px; }
+  .card .k > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  table.data.cards-sm thead { display: none; }
+  table.data.cards-sm, table.data.cards-sm tbody, table.data.cards-sm tr, table.data.cards-sm td { display: block; width: 100%; }
+  table.data.cards-sm tr { border-bottom: 1px solid var(--line); padding: 8px 4px; }
+  table.data.cards-sm tbody tr:last-child { border-bottom: 0; }        /* the panel's edge is the last line */
+  table.data.cards-sm tbody tr.total td { border-top: 0; }             /* the card line above is enough */
+  table.data.cards-sm td, table.data.cards-sm td.name, table.data.cards-sm td.wrap { white-space: normal; overflow: visible; height: auto; }   /* phone cards: full text */
+  table.data.cards-sm td { border: 0; height: auto; padding: 2px 8px; display: flex; justify-content: space-between; gap: 12px; text-align: right; }
+  table.data.cards-sm tbody tr:nth-child(even) td { background: transparent; }   /* cards: no striping */
+  table.data.cards-sm td::before { content: attr(data-label); color: var(--muted); font-size: 12px; text-align: left; }
+  table.data.cards-sm td.primary-cell { font-weight: 600; text-align: left; }
+  table.data.cards-sm td.primary-cell::before { content: none; }
+  table.data.cards-sm tr.total { background: var(--surface-2); }
+  table.data.cards-sm tr.total.foot { background: var(--accent); color: #fff; }
+  table.data.cards-sm tr.total.foot td::before { color: rgba(255,255,255,.8); }
+  /* Total rows on phones: "Total" and the main amount (td.total-main) share the first line, amount on the right; any
+     other figures (Invoices, Bills…) follow on their own lines below. */
+  table.data.cards-sm tr.total.foot:has(td.total-main) { display: flex; flex-wrap: wrap; align-items: center; }
+  table.data.cards-sm tr.total.foot:has(td.total-main) td { order: 2; flex: 0 0 100%; }
+  table.data.cards-sm tr.total.foot:has(td.total-main) td.primary-cell { order: 0; flex: 1 1 auto; width: auto; }
+  table.data.cards-sm tr.total.foot:has(td.total-main) td.total-main { order: 1; flex: 0 0 auto; width: auto; font-weight: 700; }
+  table.data.cards-sm tr.total.foot:has(td.total-main) td.total-main::before { content: none; }
+  .page-head .toolbar { width: 100%; }
+  /* Phone page header: the period picker fills the row and the other actions sit beside it as compact buttons. */
+  .page-head { gap: 10px; }
+  .page-actions:has(> .toolbar) { width: 100%; }
+  .page-actions:not(:has(> .toolbar)) { margin-left: auto; align-self: flex-start; }
+  .page-head .titles { min-width: 0; }
+  .date-range.plain .sel.date { flex: none; }
+  .date-range.plain .sel-btn { width: auto; }
+  .page-skeleton .page-head > .toolbar { width: auto; margin-left: auto; align-self: flex-start; }
+  .page-skeleton .page-head > .toolbar .sk-ctl { flex: none; width: 38px !important; }
+  /* Period picker: dropdown + action buttons on the first row, the custom date range (if any) on its own full row below. */
+  .page-actions > .period-control { display: contents; }
+  .page-actions > .period-control > .sel { flex: 1 1 0; min-width: 0; }
+  .page-actions > .period-control > .date-range { order: 2; flex: 1 1 100%; height: 38px; }
+  .date-range .sel.date { flex: 1; min-width: 0; }
+  .date-range .sel-btn { width: 100%; justify-content: center; }
+  .page-actions > .toolbar { width: auto; flex: 1 1 auto; min-width: 0; }
+  .page-actions > .toolbar .sel, .page-actions > .toolbar .sel-btn { width: 100%; }
+  .page-actions .toolbar > label.field { white-space: nowrap; }   /* "As of" stays on one line */
+  .page-actions .toolbar > .btn.sm { height: 38px; }
+  .page-actions > .btn, .page-actions > details, .page-actions > .sel { flex: none; }
+  .page-actions .btn, .page-actions .sel-btn { height: 38px; }   /* easier to tap */
+  .print-btn { width: 38px; padding: 0; justify-content: center; }
+  .print-btn .btn-text { display: none; }
+  /* Option switches: one per row, full width, equal options, labels in a column. */
+  .filters:has(> .seg-group) { gap: 8px; }
+  .seg-group { flex: 1 1 100%; margin-right: 0; }
+  .seg-label { width: 56px; flex: none; }
+  .seg { flex: 1; }
+  .seg button { flex: 1; padding: 0 8px; }
+  .hide-xs { display: none !important; }
+  table.data.cards-sm td.primary-cell { justify-content: flex-start; align-items: center; flex-wrap: wrap; }
+  .topbar select, .topbar .sel { max-width: 46vw !important; }
+}
+.avatar-btn { list-style: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; }
+.avatar-btn::-webkit-details-marker { display: none; }
+.avatar { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff;
+  font-weight: 600; font-size: 15px; line-height: 1; user-select: none; transition: box-shadow .15s; }
+.avatar-btn:hover .avatar, details[open] > .avatar-btn .avatar { box-shadow: 0 0 0 3px var(--accent-weak); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ── Print ── */
+@media print {
+  :root { font-size: 11px; }
+  body { background: #fff; }
+  .nav, .topbar, .no-print, .filters, .tabs, .toolbar, .table-foot button, .scrim { display: none !important; }
+  .shell { display: block; }
+  .content { padding: 0; }
+  .panel, .card { border-color: #ccc; break-inside: avoid; }
+  table.data th { position: static; background: var(--accent) !important; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .sheet-title ~ * table.data th { background: #f7f8fa !important; color: var(--muted); }
+  .sheet-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  table.data thead { display: table-header-group; }
+  table.data tbody tr.total.foot td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  table.data tr { break-inside: avoid; }
+  .print-only { display: block !important; }
+  .table-wrap { overflow: visible; }
+  a { color: inherit; }
+}
+.print-only { display: none; }
+/* One-tap connector setup (components/connect.tsx) */
+.connect-btn { height: 40px; padding: 0 20px; font-size: 15px; font-weight: 600; }
+.connect-box { display: flex; gap: 14px; align-items: flex-start; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); text-align: left; }
+.connect-box.ok { background: var(--ok-bg); border-color: #bfe3cc; }
+.connect-box .muted { margin-top: 3px; }
+.connect-ic { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--ok); color: #fff; font-weight: 700; }
+.connect-spin { flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%; border: 3px solid var(--accent-weak); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .connect-spin { animation-duration: 2.4s; } }
+.connect-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+/* No visible scrollbars anywhere (page, menus, tables, tabs, dropdowns). Scrolling still works with the wheel, touchpad,
+ * touch and keyboard. With no bar, the layout no longer changes width when a page grows past the screen height. */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
+/* Loading placeholders shaped like the content (components/ui.tsx → Loading) */
+.skeleton { min-height: 320px; }
+.sk { background: linear-gradient(90deg, #eceff3 25%, #f5f7f9 40%, #eceff3 60%); background-size: 300% 100%; border-radius: 6px; animation: sk-shine 1.3s ease-in-out infinite; }
+@keyframes sk-shine { from { background-position: 100% 0; } to { background-position: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+.sk-line { height: 11px; margin: 7px 0; }
+.sk-line.big { height: 22px; margin: 12px 0; }
+.w40 { width: 40%; } .w55 { width: 55%; } .w70 { width: 70%; }
+.sk-panel { padding: 8px 14px; }
+.sk-row { height: 16px; margin: 14px 0; }
+.sk-row:nth-child(3n) { width: 85%; } .sk-row:nth-child(4n) { width: 92%; }
+/* Whole-page placeholders (components/ui.tsx → PageSkeleton, shell.tsx → RouteSkeleton / ShellSkeleton) */
+.sk-text { display: inline-block; vertical-align: middle; height: 12px; max-width: 100%; }
+.sk-text.big { height: 20px; }
+.sk-ctl { display: inline-block; height: 32px; max-width: 100%; }
+.sk-avatar { display: inline-block; width: 34px; height: 34px; border-radius: 50%; margin: 0 2px; }
+.sk-filters { display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.sk-kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 4px 24px; }
+.sk-chart { height: 100%; min-height: 120px; }
+.page-skeleton { min-height: 420px; }
+@media (max-width: 640px) { .page-skeleton .sk-ctl { flex: 1; } .topbar .sk-ctl { width: 46vw !important; } }
+/* New figures loading for a changed period / search / page: the previous figures stay in place, dimmed (no jump, never mislabelled).
+   The page head (title, period control) stays fully usable. A short delay avoids a flicker on fast loads. */
+main[data-updating] > .route-view > :not(.page-head):not(.notice) { opacity: .45; transition: opacity .15s ease .12s; }
+.route-view > * { transition: opacity .12s ease; }
+/* The page wrapper adds no box of its own (layout and print are as if the page were placed in <main> directly). */
+.route-view { display: contents; }
+.route-view[hidden] { display: none; }
